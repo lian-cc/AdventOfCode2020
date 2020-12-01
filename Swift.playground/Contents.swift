@@ -5,6 +5,8 @@ import UIKit
  */
 
 class Solution {
+    let goal: Int = 2020
+    
     func result(_ input: [Int]) -> Int? {
         var stacks = input
         while stacks.count > 2 {
@@ -12,7 +14,7 @@ class Solution {
             var secondStacks = stacks
             while secondStacks.count > 1 {
                 let num2 = secondStacks.removeFirst()
-                let target = 2020 - num - num2
+                let target = goal - num - num2
                 guard secondStacks.contains(target) else {
                     continue
                 }
