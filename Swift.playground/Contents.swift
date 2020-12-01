@@ -11,7 +11,7 @@ class Solution {
         var stacks = input
         while stacks.count > 2 {
             let num = stacks.removeFirst()
-            var possibleNumbers = stacks
+            var possibleNumbers = stacks.filter { $0 + num < goal }
             while possibleNumbers.count > 1 {
                 let num2 = possibleNumbers.removeFirst()
                 let target = goal - num - num2
