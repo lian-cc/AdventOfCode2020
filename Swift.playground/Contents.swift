@@ -5,8 +5,17 @@ import UIKit
  */
 
 class Solution {
-    func result(_ input: [Int]) -> Int {
-        return 0
+    func result(_ input: [Int]) -> Int? {
+        var stacks = input
+        while stacks.count > 1 {
+            let num = stacks.removeFirst()
+            let target = 2020 - num
+            guard stacks.contains(target) else {
+                continue
+            }
+            return num * target
+        }
+        return nil
     }
 }
 
