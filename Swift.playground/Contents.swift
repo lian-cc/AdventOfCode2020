@@ -11,11 +11,11 @@ class Solution {
         var stacks = input
         while stacks.count > 2 {
             let num = stacks.removeFirst()
-            var secondStacks = stacks
-            while secondStacks.count > 1 {
-                let num2 = secondStacks.removeFirst()
+            var possibleNumbers = stacks
+            while possibleNumbers.count > 1 {
+                let num2 = possibleNumbers.removeFirst()
                 let target = goal - num - num2
-                guard secondStacks.contains(target) else {
+                guard possibleNumbers.contains(target) else {
                     continue
                 }
                 return num * num2 * target
