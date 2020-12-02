@@ -8,7 +8,31 @@ class Solution {
     
     func result(_ input: ([Int], [Int], [Character], [String])) -> Int {
         var count = 0
+        for i in 0 ..< input.3.count {
+            if checkValid(minTimes: input.0[i], maxTimes: input.1[i], target: input.2[i], password: input.3[i]) {
+                count += 1
+            }
+        }
         return count
+    }
+    
+    private func checkValid(minTimes: Int, maxTimes: Int, target: Character, password: String) -> Bool {
+        var count = 0
+        
+        for c in password {
+            if c == target {
+                count += 1
+            }
+            guard count <= maxTimes else {
+                return false
+            }
+        }
+        
+        guard count >= minTimes else {
+            return false
+        }
+        
+        return true
     }
 }
 
