@@ -17,18 +17,10 @@ class Solution {
     }
     
     private func checkValid(minTimes: Int, maxTimes: Int, target: Character, password: String) -> Bool {
-        var count = 0
+        let isMatchMinPosition: Bool = password[password.index(password.startIndex, offsetBy: minTimes - 1)] == target
+        let isMatchMaxPosition: Bool = password[password.index(password.startIndex, offsetBy: maxTimes - 1)] == target
         
-        for c in password {
-            if c == target {
-                count += 1
-            }
-            guard count <= maxTimes else {
-                return false
-            }
-        }
-        
-        guard count >= minTimes else {
+        guard (isMatchMinPosition || isMatchMaxPosition) && (isMatchMinPosition != isMatchMaxPosition) else {
             return false
         }
         
