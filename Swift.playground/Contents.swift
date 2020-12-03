@@ -6,9 +6,12 @@ import UIKit
 
 class Solution {
     
-    var x: Int = 0
-    
     func result(_ input: String) -> Int {
+        return trees(for: input, delta: 3)
+    }
+    
+    func trees(for input: String, delta: Int) -> Int {
+        var x: Int = 0
         var count: Int = 0
         
         let rows = input.components(separatedBy: "\n")
@@ -21,7 +24,7 @@ class Solution {
             if c == "#" {
                 count += 1
             }
-            x += 3
+            x += delta
             if x >= columns {
                 x -= columns
             }
