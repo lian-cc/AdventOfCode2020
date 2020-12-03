@@ -7,7 +7,14 @@ import UIKit
 class Solution {
     
     func result(_ input: String) -> Int {
-        return trees(for: input, deltaX: 3, deltaY: 1)
+        var answer: Int = 1
+        let ways: [(Int, Int)] = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
+        for (x, y) in ways {
+            let tree = trees(for: input, deltaX: x, deltaY: y)
+            print(tree)
+            answer *= tree
+        }
+        return answer
     }
     
     func trees(for input: String, deltaX: Int, deltaY: Int) -> Int {
