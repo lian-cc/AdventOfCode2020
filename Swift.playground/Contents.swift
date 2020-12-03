@@ -7,11 +7,12 @@ import UIKit
 class Solution {
     
     func result(_ input: String) -> Int {
-        return trees(for: input, delta: 3)
+        return trees(for: input, deltaX: 3, deltaY: 1)
     }
     
-    func trees(for input: String, delta: Int) -> Int {
+    func trees(for input: String, deltaX: Int, deltaY: Int) -> Int {
         var x: Int = 0
+        var y: Int = 0
         var count: Int = 0
         
         let rows = input.components(separatedBy: "\n")
@@ -19,15 +20,17 @@ class Solution {
             fatalError("Input is invalid")
         }
         
-        for row in rows {
+        while y < rows.count {
+            let row = rows[y]
             let c = row[row.index(row.startIndex, offsetBy: x)]
             if c == "#" {
                 count += 1
             }
-            x += delta
+            x += deltaX
             if x >= columns {
                 x -= columns
             }
+            y += deltaY
         }
         
         return count
