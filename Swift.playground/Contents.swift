@@ -7,7 +7,26 @@ import UIKit
 class Solution {
     
     func result(_ input: String) -> Int {
-        return 0
+        let passports = input.components(separatedBy: "\n\n")
+        return passports.reduce(0) { (result, passport) -> Int in
+            return result + (isValid(passport: passport) ? 1 : 0)
+        }
+    }
+    
+    func isValid(passport: String) -> Bool {
+        let countFields = passport.filter { $0 == ":" }.count
+        switch countFields {
+        case 8:
+            return true
+        case 7:
+            if passport.contains("cid:") {
+                return false
+            } else {
+                return true
+            }
+        default:
+            return false
+        }
     }
 }
 
