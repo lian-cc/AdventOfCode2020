@@ -9,7 +9,10 @@ class Solution {
     func result(_ input: String) -> Int {
         let passports = input.components(separatedBy: "\n\n")
         return passports.reduce(0) { (result, passport) -> Int in
-            return result + (isValid(passport: passport) ? 1 : 0)
+            guard isValid(passport: passport), isCorrect(passport: passport) else {
+                return result
+            }
+            return result + 1
         }
     }
     
@@ -26,6 +29,92 @@ class Solution {
             }
         default:
             return false
+        }
+    }
+    
+    func isCorrect(passport: String) -> Bool {
+        let fields = passport.components(separatedBy: CharacterSet(["\n", " "]))
+        for field in fields {
+            let components = field.components(separatedBy: ":")
+            guard components.count > 1 else {
+                print("[❗️] components is invalid: \(components)")
+                continue
+            }
+            guard isValid(value: components[1], for: components[0]) else {
+                return false
+            }
+        }
+        return true
+    }
+    
+    func isValid(value: String, for field: String) -> Bool {
+        let eyeColros = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+        switch field {
+        case "byr":
+            guard let birthYear = Int(value) else {
+                return false
+            }
+            return 1920...2002 ~= birthYear
+        case "iyr":
+            guard let issueYear = Int(value) else {
+                return false
+            }
+            return 2010...2020 ~= issueYear
+        case "eyr":
+            guard let expirationYear = Int(value) else {
+                return false
+            }
+            return 2020...2030 ~= expirationYear
+        case "hgt":
+            guard let height = Height(with: value) else {
+                return false
+            }
+            return height.isCorrect
+        case "hcl":
+            guard value.count == 7, value.hasPrefix("#") else {
+                return false
+            }
+            for c in value.dropFirst() {
+                guard "0"..."9" ~= c || "a"..."f" ~= c else {
+                    return false
+                }
+            }
+        case "ecl":
+            return eyeColros.contains(value)
+        case "pid":
+            guard value.count == 9, CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: value)) else {
+                return false
+            }
+        case "cid":
+            break
+        default:
+            return false
+        }
+        return true
+    }
+    
+    enum Height {
+        case centimeter(Int)
+        case inch(Int)
+        
+        init?(with rawString: String) {
+            guard let value = Int(rawString.dropLast(2)) else { return nil }
+            if rawString.hasSuffix("cm") {
+                self = .centimeter(value)
+            } else if rawString.hasSuffix("in") {
+                self = .inch(value)
+            } else {
+                return nil
+            }
+        }
+        
+        var isCorrect: Bool {
+            switch self {
+            case let .centimeter(value):
+                return 150...193 ~= value
+            case let .inch(value):
+                return 59...76 ~= value
+            }
         }
     }
 }
