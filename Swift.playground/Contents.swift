@@ -21,6 +21,23 @@ class Solution {
         return highestSeatID
     }
     
+    func findSeat(for input: String) -> Int? {
+        var allSeatID: [Int] = input.components(separatedBy: "\n").compactMap { (component) -> Int? in seatID(for: component) }
+        guard !allSeatID.isEmpty else {
+            return nil
+        }
+        allSeatID.sort()
+        var previousID: Int?
+        for seatID in allSeatID {
+            guard let pid = previousID, pid != (seatID - 1) else {
+                previousID = seatID
+                continue
+            }
+            return seatID - 1
+        }
+        return nil
+    }
+    
     func seatID(for binarySpacePartitioning: String) -> Int? {
         guard binarySpacePartitioning.count == 10 else {
             return nil
@@ -85,7 +102,7 @@ class Solution {
 }
 
 let sol = Solution()
-sol.highestSeatID(for: """
+sol.findSeat(for: """
 FBFBBFBRRL
 BBFFBFFRLR
 FBBFFBBLLL
