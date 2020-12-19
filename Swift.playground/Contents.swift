@@ -9,6 +9,68 @@ class Solution {
     func highestSeatID(for input: String) -> Int? {
         return nil
     }
+    
+    func seatID(for binarySpacePartitioning: String) -> Int? {
+        guard binarySpacePartitioning.count == 10 else {
+            return nil
+        }
+        
+        var rowModel = Model(offset: 0, count: 128)
+        let rowPart = binarySpacePartitioning.dropLast(3)
+        
+        for c in rowPart {
+            switch c {
+            case "F":
+                rowModel = rowModel.lowerHalf
+            case "B":
+                rowModel = rowModel.upperHalf
+            default:
+                return nil
+            }
+        }
+        
+        var columnModel = Model(offset: 0, count: 8)
+        let columnPart = binarySpacePartitioning.dropFirst(7)
+        
+        for c in columnPart {
+            switch c {
+            case "L":
+                columnModel = columnModel.lowerHalf
+            case "R":
+                columnModel = columnModel.upperHalf
+            default:
+                return nil
+            }
+        }
+        
+        guard let row = rowModel.result, let column = columnModel.result else {
+            return nil
+        }
+        
+        return row * 8 + column
+    }
+    
+    private struct Model: CustomDebugStringConvertible {
+        let offset: Int
+        let count: Int
+        
+        var debugDescription: String { "\(offset)~\(offset + count - 1)" }
+        
+        var result: Int? {
+            guard count == 1 else {
+                return nil
+            }
+            return offset
+        }
+        
+        var upperHalf: Model {
+            return Model(offset: offset + count / 2, count: count / 2)
+        }
+        
+        var lowerHalf: Model {
+            return Model(offset: offset, count: count / 2)
+        }
+    }
 }
 
 let sol = Solution()
