@@ -13,12 +13,19 @@ class Solution {
     }
     
     func count(group: String) -> Int {
-        var answerSet = Set<Character>()
-        for c in group {
-            guard c != "\n" else { continue }
-            answerSet.insert(c)
+        let persons = group.components(separatedBy: "\n")
+        guard let first = persons.first else {
+            return 0
         }
-        return answerSet.count
+        var answer: Set<Character> = Set(first)
+        for person in persons.dropFirst() {
+            let newAnswer: Set<Character> = Set(person)
+            answer = answer.intersection(newAnswer)
+            guard answer.count > 0 else {
+                return 0
+            }
+        }
+        return answer.count
     }
 }
 
