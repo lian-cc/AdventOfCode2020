@@ -7,7 +7,18 @@ import UIKit
 class Solution {
     
     func highestSeatID(for input: String) -> Int? {
-        return nil
+        var highestSeatID: Int?
+        for component in input.components(separatedBy: "\n") {
+            guard let seatID = seatID(for: component) else {
+                continue
+            }
+            guard let currentID = highestSeatID else {
+                highestSeatID = seatID
+                continue
+            }
+            highestSeatID = max(currentID, seatID)
+        }
+        return highestSeatID
     }
     
     func seatID(for binarySpacePartitioning: String) -> Int? {
