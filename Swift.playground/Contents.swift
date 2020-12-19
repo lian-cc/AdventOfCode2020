@@ -6,9 +6,20 @@ import UIKit
 
 class Solution {
     func sum(for input: String) -> Int {
-        return 0
+        let groups = input.components(separatedBy: "\n\n")
+        return groups.reduce(0) { (result, group) in
+            result + count(group: group)
+        }
     }
     
+    func count(group: String) -> Int {
+        var answerSet = Set<Character>()
+        for c in group {
+            guard c != "\n" else { continue }
+            answerSet.insert(c)
+        }
+        return answerSet.count
+    }
 }
 
 var input: String { """
