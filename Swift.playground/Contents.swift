@@ -45,9 +45,18 @@ class Solution {
                 continue
             }
             let container = components[0].trimmingCharacters(in: CharacterSet.whitespaces)
-            let contents = components[1].components(separatedBy: ",").map {
-                $0.removeCharacters(from: decimalDigits)
-                    .trimmingCharacters(in: CharacterSet.whitespaces)
+            var contents = [String]()
+            for var content in components[1].components(separatedBy: ",") {
+                content = content.trimmingCharacters(in: CharacterSet.whitespaces)
+                guard content != "no other" else {
+                    continue
+                }
+                guard let first = content.first, let count = Int(String(first)) else {
+                    print("[⚠️] Unknown content bag: \(content)")
+                    continue
+                }
+                let bag = content.removeCharacters(from: decimalDigits).trimmingCharacters(in: CharacterSet.whitespaces)
+                contents.append(contentsOf: Array(repeating: bag, count: count))
             }
             rules[container] = contents
         }
