@@ -9,6 +9,46 @@ class Solution {
     func result(for target: String, withInputRules inputRules: String) -> Int {
         return 0
     }
+    
+    func rules(from input: String) -> [String: [String]] {
+        var rules = [String: [String]]()
+        let decimalDigits = CharacterSet.decimalDigits
+        
+        for var rule in input.components(separatedBy: "\n") {
+            guard !rule.isEmpty else { continue }
+            rule = rule.replacingOccurrences(of: "bags", with: "")
+            rule = rule.replacingOccurrences(of: "bag", with: "")
+            if rule.last == "." {
+                rule = String(rule.dropLast())
+            }
+            let components = rule.components(separatedBy: "contain")
+            guard components.count > 1 else {
+                print("[⚠️] Unknown rule: \(rule)")
+                continue
+            }
+            let container = components[0].trimmingCharacters(in: CharacterSet.whitespaces)
+            let contents = components[1].components(separatedBy: ",").map {
+                $0.removeCharacters(from: decimalDigits)
+                    .trimmingCharacters(in: CharacterSet.whitespaces)
+            }
+            rules[container] = contents
+        }
+        
+        return rules
+    }
+}
+
+// 🔗https://stackoverflow.com/a/41649414/6545858
+extension String {
+
+    func removeCharacters(from forbiddenChars: CharacterSet) -> String {
+        let passed = unicodeScalars.filter { !forbiddenChars.contains($0) }
+        return String(String.UnicodeScalarView(passed))
+    }
+
+    func removeCharacters(from: String) -> String {
+        return removeCharacters(from: CharacterSet(charactersIn: from))
+    }
 }
 
 let sol = Solution()
