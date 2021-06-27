@@ -7,7 +7,25 @@ import UIKit
 class Solution {
     
     func result(for target: String, withInputRules inputRules: String) -> Int {
-        return 0
+        var count = 0
+        var rules = rules(from: inputRules)
+        var findBags: Set<String> = [target]
+        while !findBags.isEmpty {
+            var containers = Set<String>()
+            for target in findBags {
+                for (container, contents) in rules {
+                    if contents.contains(target) {
+                        containers.insert(container)
+                    }
+                }
+                containers.forEach {
+                    rules.removeValue(forKey: $0)
+                }
+            }
+            count += containers.count
+            findBags = containers
+        }
+        return count
     }
     
     func rules(from input: String) -> [String: [String]] {
