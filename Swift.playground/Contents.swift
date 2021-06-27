@@ -6,26 +6,21 @@ import UIKit
 
 class Solution {
     
+    var rules = [String: [String]]()
+    
     func result(for target: String, withInputRules inputRules: String) -> Int {
-        var count = 0
-        var rules = rules(from: inputRules)
-        var findBags: Set<String> = [target]
-        while !findBags.isEmpty {
-            var containers = Set<String>()
-            for target in findBags {
-                for (container, contents) in rules {
-                    if contents.contains(target) {
-                        containers.insert(container)
-                    }
-                }
-                containers.forEach {
-                    rules.removeValue(forKey: $0)
-                }
-            }
-            count += containers.count
-            findBags = containers
+        self.rules = rules(from: inputRules)
+        print()
+        return countCotent(for: target)
+    }
+    
+    func countCotent(for target: String) -> Int {
+        guard let contents = rules[target] else {
+            fatalError("Unknown bag: \(target)")
         }
-        return count
+        return contents.reduce(contents.count) { result, target in
+            result + countCotent(for: target)
+        }
     }
     
     func rules(from input: String) -> [String: [String]] {
