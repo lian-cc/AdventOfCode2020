@@ -18,7 +18,25 @@ class Solution {
     }
     
     func result(for input: String) -> Int {
-        return 0
+        var instructions: [Instruction?] = input.components(separatedBy: CharacterSet.newlines).compactMap { Instruction(from: $0) }
+        var index = 0
+        var accumulator = 0
+        
+        while let instruction = instructions[index] {
+            instructions[index] = nil
+            
+            switch instruction.operation {
+            case .accumulator:
+                accumulator += instruction.argument
+                index += 1
+            case .jumps:
+                index += instruction.argument
+            case .noOperation:
+                index += 1
+            }
+        }
+        
+        return accumulator
     }
 }
 
