@@ -18,12 +18,35 @@ class Solution {
     }
     
     func result(for input: String) -> Int {
-        var instructions: [Instruction?] = input.components(separatedBy: CharacterSet.newlines).compactMap { Instruction(from: $0) }
+        let instructions: [Instruction] = input.components(separatedBy: CharacterSet.newlines).compactMap { Instruction(from: $0) }
+        let result = tryToGoal(for: instructions)
+        
+        switch result {
+        case let .success(accumulator):
+            return accumulator
+        case .failure(.infiniteLoop(let accumulator)):
+            return accumulator
+        case .failure(.outOfRange):
+            fatalError("Out of range")
+        }
+    }
+    
+    enum BootError: Error {
+        case infiniteLoop(afterAccumulator: Int)
+        case outOfRange
+    }
+    
+    func tryToGoal(for instructions: [Instruction]) -> Result<Int, BootError> {
+        var runInstructions: [Instruction?] = instructions
         var index = 0
         var accumulator = 0
         
-        while let instruction = instructions[index] {
-            instructions[index] = nil
+        while index < instructions.count {
+            guard let instruction = runInstructions[index] else {
+                return Result.failure(.infiniteLoop(afterAccumulator: accumulator))
+            }
+            
+            runInstructions[index] = nil
             
             switch instruction.operation {
             case .accumulator:
@@ -34,9 +57,13 @@ class Solution {
             case .noOperation:
                 index += 1
             }
+            
+            if index == instructions.count {
+                return .success(accumulator)
+            }
         }
         
-        return accumulator
+        return Result.failure(.outOfRange)
     }
 }
 
