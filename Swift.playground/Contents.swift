@@ -6,8 +6,41 @@ import UIKit
 
 class Solution {
     
+    enum Operation: String {
+        case accumulator = "acc"
+        case jumps = "jmp"
+        case noOperation = "nop"
+    }
+    
+    struct Instruction {
+        let operation: Operation
+        let argument: Int
+    }
+    
     func result(for input: String) -> Int {
         return 0
+    }
+}
+
+extension Solution.Instruction {
+    
+    init?(from rawData: String) {
+        guard rawData.count > 0 else {
+            return nil
+        }
+        
+        let components = rawData.components(separatedBy: " ")
+        
+        guard
+            components.count > 1,
+            let operation = Solution.Operation(rawValue: components[0]),
+            let argument = Int(components[1])
+        else {
+            fatalError("[❗️] Unknown instruction: \(rawData)")
+        }
+        
+        self.operation = operation
+        self.argument = argument
     }
 }
 
