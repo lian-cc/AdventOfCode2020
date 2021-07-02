@@ -7,7 +7,53 @@ import UIKit
 class Solution {
     
     func result(for input: String) -> Int {
-        return 0
+        let preambleCount = 25
+        var numbers = parseInputData(input)
+        var queue = [Int]()
+        
+        guard numbers.count > preambleCount else {
+            fatalError("Data does not have enough preamble")
+        }
+        
+        for _ in 0 ..< preambleCount {
+            queue.append(numbers.removeFirst())
+        }
+        
+        while let number = numbers.first {
+            guard validNumber(number, for: queue) else {
+                return number
+            }
+            queue.removeFirst()
+            queue.append(numbers.removeFirst())
+        }
+        
+        fatalError("No answer")
+    }
+    
+    func validNumber(_ number: Int, for preamble: [Int]) -> Bool {
+        var queue = preamble
+        
+        while let x = queue.first {
+            queue.removeFirst()
+            for y in queue {
+                guard x + y == number else {
+                    continue
+                }
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    func parseInputData(_ data: String) -> [Int] {
+        let components = data.components(separatedBy: CharacterSet.newlines).filter { $0.count > 0 }
+        return components.map { component in
+            guard let rowData = Int(component) else {
+                fatalError("Unknown data: \(component)")
+            }
+            return rowData
+        }
     }
 }
 
