@@ -20,11 +20,12 @@ class Solution {
         }
         
         while let number = numbers.first {
-            guard validNumber(number, for: queue) else {
-                return number
+            if validNumber(number, for: queue) {
+                queue.removeFirst()
+                queue.append(numbers.removeFirst())
+                continue
             }
-            queue.removeFirst()
-            queue.append(numbers.removeFirst())
+            return number
         }
         
         fatalError("No answer")
