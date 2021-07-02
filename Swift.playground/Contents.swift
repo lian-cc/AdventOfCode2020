@@ -10,7 +10,8 @@ class Solution {
     
     func result(for input: String) -> Int {
         let numbers = parseInputData(input)
-        return invalidNumber(in: numbers)
+        let number = invalidNumber(in: numbers)
+        return sumOfTwoNumbersInContiguousSet(for: number, in: numbers)
     }
     
     func invalidNumber(in numbers: [Int]) -> Int {
@@ -51,6 +52,46 @@ class Solution {
         }
         
         return false
+    }
+    
+    func sumOfTwoNumbersInContiguousSet(for number: Int, in numbers: [Int]) -> Int {
+        guard
+            let contiguousSet = contiguousSet(for: number, in: numbers)?.sorted(),
+            let smallestNumber = contiguousSet.first,
+            let largestNumber = contiguousSet.last
+        else {
+            fatalError("No answer")
+        }
+        return smallestNumber + largestNumber
+    }
+    
+    func contiguousSet(for goal: Int, in list: [Int]) -> [Int]? {
+        var list = list
+        var queue = [Int]()
+        var sum = 0
+        
+        while let number = list.first {
+            queue.append(list.removeFirst())
+            sum += number
+            
+            if sum == goal {
+                guard queue.count > 1 else {
+                    sum -= queue.removeFirst()
+                    continue
+                }
+                return queue
+            }
+            
+            while sum >= goal {
+                sum -= queue.removeFirst()
+                guard sum == goal, queue.count > 1 else {
+                    continue
+                }
+                return queue
+            }
+        }
+            
+        return nil
     }
     
     func parseInputData(_ data: String) -> [Int] {
