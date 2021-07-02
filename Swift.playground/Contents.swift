@@ -6,9 +6,15 @@ import UIKit
 
 class Solution {
     
+    let preambleCount = 25
+    
     func result(for input: String) -> Int {
-        let preambleCount = 25
-        var numbers = parseInputData(input)
+        let numbers = parseInputData(input)
+        return invalidNumber(in: numbers)
+    }
+    
+    func invalidNumber(in numbers: [Int]) -> Int {
+        var numbers = numbers
         var queue = [Int]()
         
         guard numbers.count > preambleCount else {
