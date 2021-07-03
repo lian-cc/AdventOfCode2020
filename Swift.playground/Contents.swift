@@ -8,7 +8,7 @@ class Solution {
     
     func result(for input: String) -> Int {
         let data = parseInputData(input).sorted()
-        return partOneAnswer(for: data)
+        return partTwoAnswer(for: data)
     }
     
     func partOneAnswer(for data: [Int]) -> Int {
@@ -43,6 +43,57 @@ class Solution {
         differences.append(3)
         
         return differences
+    }
+    
+    func partTwoAnswer(for data: [Int]) -> Int {
+        guard !data.isEmpty else {
+            fatalError("Data is empty")
+        }
+        
+        let differences = differences(for: data)
+        return countDistinctWays(forDifferences: differences)
+    }
+    
+    let magicNumbers = [1, 2, 4, 7 ,13]
+    
+    func countDistinctWays(forDifferences differences: [Int]) -> Int {
+        var data = differences
+        var distinctWays: Int?
+        var consecutiveTimes = 0
+        
+        while !data.isEmpty {
+            let number = data.removeFirst()
+            
+            if number == 1 {
+                consecutiveTimes += 1
+            } else if number == 3 {
+                guard consecutiveTimes > 0 else {
+                    continue
+                }
+                
+                let index = consecutiveTimes - 1
+                
+                guard index < magicNumbers.count else {
+                    fatalError("Need magic number for continuous times: \(consecutiveTimes)")
+                }
+                
+                let magicNumber = magicNumbers[index]
+                
+                if let base = distinctWays {
+                    distinctWays = base * magicNumber
+                } else if distinctWays == nil {
+                    distinctWays = magicNumber
+                }
+                
+                consecutiveTimes = 0
+            }
+        }
+        
+        guard let distinctWays = distinctWays else {
+            fatalError("Did not find answer")
+        }
+        
+        return distinctWays
     }
     
     func parseInputData(_ data: String) -> [Int] {
