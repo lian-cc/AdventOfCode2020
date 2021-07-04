@@ -12,45 +12,37 @@ class Solution {
     }
     
     func partOneAnswer(for data: [Int]) -> Int {
-        let difference = countDifference(for: data)
-        guard
-            let diff1 = difference[1],
-            let diff3 = difference[3]
-        else {
-            fatalError("Count difference error")
-        }
+        let differences = differences(for: data)
+        let diff1 = differences.filter({ $0 == 1 }).count
+        let diff3 = differences.filter({ $0 == 3 }).count
         return diff1 * diff3
     }
     
-    func countDifference(for data: [Int]) -> [Int: Int] {
+    func differences(for data: [Int]) -> [Int] {
         guard !data.isEmpty else {
             fatalError("Data is empty")
         }
         
-        var count = [
-            1: 0,
-            2: 0,
-            3: 0,
-        ]
-        
         var data = data
         var previousNumber = 0
+        
+        var differences = [Int]()
         
         while !data.isEmpty {
             let number = data.removeFirst()
             let difference = number - previousNumber
             
-            guard count.keys.contains(difference) else {
+            guard 1...3 ~= difference else {
                 fatalError("Connection is broken")
             }
             
-            count[difference]! += 1
+            differences.append(difference)
             previousNumber = number
         }
         
-        count[3]! += 1
+        differences.append(3)
         
-        return count
+        return differences
     }
     
     func parseInputData(_ data: String) -> [Int] {
